@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXORA GAMES</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10152b;color:#fff;font-family:Arial,sans-serif;padding:22px}
+.wrap{max-width:520px;margin:auto}.brand{text-align:center;padding:24px 10px}
+h1{margin:0;color:#7ee7ff;letter-spacing:2px}.sub{color:#b9c5df;margin-top:8px}
+.card{background:#202947;border:1px solid #34436d;border-radius:18px;padding:18px;margin:14px 0}
+.coins{font-size:28px;color:#ffe17a;font-weight:bold}
+button{width:100%;border:0;border-radius:13px;padding:15px;margin-top:10px;font-size:17px;font-weight:bold;background:#54d5bb;color:#102039}
+button.secondary{background:#6479ff;color:white}button:disabled{opacity:.5}
+.small{color:#b9c5df;font-size:13px;line-height:1.5}.result{min-height:26px;color:#9cf2c8}
+input{width:100%;padding:13px;border-radius:10px;border:0;font-size:18px;margin-top:10px}
+</style>
+</head>
+<body><div class="wrap">
+<div class="brand"><h1>NEXORA GAMES</h1><div class="sub">Play • Enjoy • Win Points</div></div>
+<div class="card">
+  <div class="small">আপনার ভার্চুয়াল কয়েন</div>
+  <div class="coins" id="coins">0 🪙</div>
+  <button id="adButton" onclick="watchAd()" disabled>বিজ্ঞাপন প্রস্তুত হচ্ছে…</button>
+  <div class="small">পরীক্ষামূলক বিজ্ঞাপন। এটি থেকে বাস্তব টাকা পাওয়া যায় না।</div>
+</div>
+<div class="card">
+  <h2>সংখ্যা অনুমান</h2>
+  <div class="small">১ থেকে ৫-এর মধ্যে একটি সংখ্যা লিখুন। সঠিক হলে ৫ কয়েন পাবেন।</div>
+  <input id="guess" type="number" min="1" max="5" placeholder="১–৫">
+  <button class="secondary" onclick="playGuess()">খেলুন</button>
+  <div class="result" id="result"></div>
+</div>
+<div class="card">
+  <div class="small">মনে রাখবেন: কয়েন শুধু গেমের ভেতরের পয়েন্ট। এগুলো টাকা নয়, নগদে তোলা বা বাজি ধরা যাবে না।</div>
+</div>
+</div>
+<script>
+let coins = Number(localStorage.getItem('nexora_coins') || 0);
+function render(){document.getElementById('coins').textContent=coins+' 🪙';}
+function addVirtualCoins(n){coins+=Number(n)||0;localStorage.setItem('nexora_coins',coins);render();}
+function watchAd(){if(window.AndroidGame){window.AndroidGame.showRewardedAd();}}
+window.onRewardAdReady=function(ready){
+ const b=document.getElementById('adButton');b.disabled=!ready;
+ b.textContent=ready?'বিজ্ঞাপন দেখুন ও বোনাস নিন':'বিজ্ঞাপন এখন প্রস্তুত নয়';
+};
+function playGuess(){
+ const v=Number(document.getElementById('guess').value);
+ if(v<1||v>5||!Number.isInteger(v)){document.getElementById('result').textContent='১ থেকে ৫-এর মধ্যে সংখ্যা দিন।';return;}
+ const n=Math.floor(Math.random()*5)+1;
+ if(v===n){addVirtualCoins(5);document.getElementById('result').textContent='সঠিক! ৫ কয়েন পেয়েছেন।';}
+ else document.getElementById('result').textContent='আবার চেষ্টা করুন। সঠিক সংখ্যা ছিল '+n+'.';
+}
+render();
+</script>
+</body></html>
